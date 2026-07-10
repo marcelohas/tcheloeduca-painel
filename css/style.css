@@ -172,10 +172,21 @@ main {
 }
 
 .upload-actions {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
+}
+
+.text-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
 }
 
 .upload-copy p,
@@ -647,6 +658,10 @@ tbody tr:hover {
   .upload-actions {
     display: grid;
     grid-template-columns: 1fr;
+  }
+
+  .text-link {
+    text-align: center;
   }
 
   .filters {

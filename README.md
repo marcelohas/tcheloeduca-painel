@@ -58,10 +58,10 @@ Cada planilha tem 35 alunos fictícios.
 ## Como usar
 
 1. Acesse o site.
-2. Clique em `Abrir planilhas` para encontrar os modelos no GitHub.
-3. Baixe uma ou mais planilhas.
-4. Volte ao site e clique em `Escolher planilhas`.
-5. Selecione os arquivos `.xlsx`.
+2. Clique em `Carregar exemplos` para abrir automaticamente as quatro planilhas fictícias no painel.
+3. Para usar arquivos próprios, clique em `Escolher planilhas`.
+4. Selecione os arquivos `.xlsx`.
+5. Use `Ver pasta no GitHub` para acessar os modelos de planilha.
 6. Use o campo `Ver turma` para alternar entre as turmas.
 7. Clique em `Relatório` em qualquer aluno para ver o relatório individual.
 8. Clique em `Imprimir relatório` para imprimir.

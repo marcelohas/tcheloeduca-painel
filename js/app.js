@@ -24,6 +24,7 @@ const els = {
   studentReport: document.getElementById('studentReport'),
   printButton: document.getElementById('printButton'),
   themeButton: document.getElementById('themeButton'),
+  loadExamplesButton: document.getElementById('loadExamplesButton'),
   clearButton: document.getElementById('clearButton'),
   filterButtons: document.querySelectorAll('.filter-button')
 };
@@ -37,6 +38,7 @@ els.classSelect.addEventListener('change', () => {
 });
 els.clearButton.addEventListener('click', resetDashboard);
 els.themeButton.addEventListener('click', toggleTheme);
+els.loadExamplesButton.addEventListener('click', loadExampleSpreadsheets);
 els.printButton.addEventListener('click', () => window.print());
 
 els.filterButtons.forEach((button) => {
@@ -93,6 +95,66 @@ async function handleFiles(event) {
     return;
   }
 
+  applyLoadedClasses(loaded);
+
+  const successText = loaded.length === 1
+    ? `1 planilha carregada: ${loaded[0].turma}.`
+    : `${loaded.length} planilhas carregadas: ${loaded.map((item) => item.turma).join(', ')}.`;
+  const errorText = errors.length ? ` Não lidas: ${errors.join(', ')}.` : '';
+  showMessage(successText + errorText, Boolean(errors.length));
+}
+
+async function loadExampleSpreadsheets() {
+  if (typeof XLSX === 'undefined') {
+    showMessage('A biblioteca de leitura de Excel não foi encontrada na pasta js.', true);
+    return;
+  }
+
+  const examples = [
+    { name: 'notas_6A.xlsx', url: 'planilhas_notas/notas_6A.xlsx' },
+    { name: 'notas_6B.xlsx', url: 'planilhas_notas/notas_6B.xlsx' },
+    { name: 'notas_7A.xlsx', url: 'planilhas_notas/notas_7A.xlsx' },
+    { name: 'notas_7B.xlsx', url: 'planilhas_notas/notas_7B.xlsx' }
+  ];
+  const loaded = [];
+  const errors = [];
+
+  els.loadExamplesButton.disabled = true;
+  els.loadExamplesButton.textContent = 'Carregando...';
+  showMessage('Carregando planilhas de exemplo...', false);
+
+  for (const example of examples) {
+    try {
+      const response = await fetch(example.url);
+      if (!response.ok) {
+        throw new Error(`Arquivo não encontrado: ${example.name}`);
+      }
+      const data = new Uint8Array(await response.arrayBuffer());
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      loaded.push(readSheetData(sheet, example.name));
+    } catch (error) {
+      errors.push(example.name);
+      console.error(error);
+    }
+  }
+
+  els.loadExamplesButton.disabled = false;
+  els.loadExamplesButton.textContent = 'Carregar exemplos';
+
+  if (!loaded.length) {
+    showMessage('Não foi possível carregar as planilhas de exemplo. Se estiver usando o arquivo local, use "Escolher planilhas".', true);
+    return;
+  }
+
+  applyLoadedClasses(loaded);
+
+  const successText = `${loaded.length} planilhas de exemplo carregadas: ${loaded.map((item) => item.turma).join(', ')}.`;
+  const errorText = errors.length ? ` Não carregadas: ${errors.join(', ')}.` : '';
+  showMessage(successText + errorText, Boolean(errors.length));
+}
+
+function applyLoadedClasses(loaded) {
   state.turmas = mergeClasses(state.turmas, loaded);
   state.turmaAtual = loaded[0].turma;
   state.selecionado = null;
@@ -103,12 +165,6 @@ async function handleFiles(event) {
 
   renderClassSelect();
   renderDashboard();
-
-  const successText = loaded.length === 1
-    ? `1 planilha carregada: ${loaded[0].turma}.`
-    : `${loaded.length} planilhas carregadas: ${loaded.map((item) => item.turma).join(', ')}.`;
-  const errorText = errors.length ? ` Não lidas: ${errors.join(', ')}.` : '';
-  showMessage(successText + errorText, Boolean(errors.length));
 }
 
 function readWorkbookSheet(file) {
