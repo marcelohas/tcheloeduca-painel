@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel de Notas da Turma</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand-link" href="https://www.linkedin.com/in/tcheloparaprofessores/" target="_blank" rel="noopener noreferrer">
+      <span class="brand-mark" aria-hidden="true">TE</span>
+      <span>
+        <strong>tchelo educa</strong>
+        <small>LinkedIn</small>
+      </span>
+    </a>
+    <div class="topbar-title">
+      <p class="eyebrow">Projeto para professores</p>
+      <h1>Painel de Notas da Turma</h1>
+    </div>
+    <div class="topbar-actions">
+      <button class="ghost-button" id="themeButton" type="button" aria-pressed="false">Modo escuro</button>
+      <button class="ghost-button" id="clearButton" type="button">Limpar</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="upload-area" id="uploadArea">
+      <div class="upload-copy">
+        <span class="upload-icon" aria-hidden="true">+</span>
+        <div>
+          <h2>Carregue as planilhas de notas</h2>
+          <p>Selecione uma ou várias turmas de uma vez, no formato .xlsx.</p>
+        </div>
+      </div>
+      <label class="primary-button" for="fileInput">Escolher planilhas</label>
+      <input id="fileInput" type="file" accept=".xlsx,.xls" multiple hidden>
+      <p class="message" id="message" role="status"></p>
+    </section>
+
+    <section class="dashboard is-empty" id="dashboard" aria-live="polite">
+      <div class="class-heading">
+        <div>
+          <p class="eyebrow">Turma carregada</p>
+          <h2 id="classTitle">Nenhuma planilha selecionada</h2>
+        </div>
+        <label class="class-selector" for="classSelect">
+          <span>Ver turma</span>
+          <select id="classSelect" disabled>
+            <option>Nenhuma turma</option>
+          </select>
+        </label>
+        <p id="classNote">Os dados aparecerão aqui depois do envio.</p>
+      </div>
+
+      <div class="analysis-grid" id="analysisGrid">
+        <article class="analysis-card">
+          <div class="analysis-header">
+            <div>
+              <p class="eyebrow">Distribuição</p>
+              <h3>Médias da turma</h3>
+            </div>
+          </div>
+          <div class="histogram" id="scoreHistogram" aria-label="Distribuição das médias">
+            <p class="empty-state">Carregue uma planilha para ver a distribuição.</p>
+          </div>
+        </article>
+
+        <article class="analysis-card">
+          <div class="analysis-header">
+            <div>
+              <p class="eyebrow">Análise</p>
+              <h3>Situação geral</h3>
+            </div>
+          </div>
+          <div class="situation-chart" id="situationChart">
+            <p class="empty-state">Os percentuais aparecem depois do envio.</p>
+          </div>
+        </article>
+
+        <article class="analysis-card">
+          <div class="analysis-header">
+            <div>
+              <p class="eyebrow">Atenção</p>
+              <h3>Pontos de atenção</h3>
+            </div>
+          </div>
+          <ul class="attention-list" id="attentionList">
+            <li>Envie uma ou mais planilhas para gerar alertas.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <article class="stat-card">
+          <span>Total de alunos</span>
+          <strong id="totalStudents">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Média geral</span>
+          <strong id="averageScore">0,0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Aprovados</span>
+          <strong id="approvedCount">0</strong>
+        </article>
+        <article class="stat-card attention">
+          <span>Recuperação</span>
+          <strong id="recoveryCount">0</strong>
+        </article>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Lista da turma</p>
+              <h3>Alunos</h3>
+            </div>
+            <div class="filters" aria-label="Filtros de alunos">
+              <button class="filter-button is-active" type="button" data-filter="all">Todos</button>
+              <button class="filter-button" type="button" data-filter="approved">Aprovados</button>
+              <button class="filter-button" type="button" data-filter="recovery">Recuperação</button>
+              <button class="filter-button" type="button" data-filter="high">Média alta</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Av1</th>
+                  <th>Av2</th>
+                  <th>Média</th>
+                  <th>Final</th>
+                  <th>Observações</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="studentsTable">
+                <tr>
+                  <td colspan="7" class="empty-row">Envie uma ou mais planilhas para preencher a tabela.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel report-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Relatório individual</p>
+              <h3 id="reportTitle">Selecione um aluno</h3>
+            </div>
+          </div>
+
+          <div class="report" id="studentReport">
+            <p class="empty-state">Clique em um aluno da tabela para montar o relatório.</p>
+          </div>
+
+          <button class="primary-button print-button" id="printButton" type="button" disabled>Imprimir relatório</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/xlsx.full.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
