@@ -171,6 +171,13 @@ main {
   gap: 16px;
 }
 
+.upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .upload-copy p,
 .class-heading p,
 .empty-state,
@@ -615,6 +622,7 @@ tbody tr:hover {
 
   .brand-link,
   .topbar-actions,
+  .upload-actions,
   .ghost-button,
   .primary-button,
   .class-selector,
@@ -632,6 +640,11 @@ tbody tr:hover {
   }
 
   .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .upload-actions {
     display: grid;
     grid-template-columns: 1fr;
   }
